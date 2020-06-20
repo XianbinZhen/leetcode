@@ -22,47 +22,71 @@
 # Could you solve it in logarithmic time complexity?
 
 def h_index(citations):
-    def binarySearch(citations, low, high):
-        print("low: ", low, " high: ", high)
-        if citations:
-            if low == high:
-                small = citations.index(citations[low])
-                great = len(citations) - small
-                if small < citations[low] <= great:
-                    return citations[low]
-                else:
-                    if citations[low] > 0:
-                        return 1
-                    else:
-                        return 0
-            elif high - low == 1:
-                small = citations.index(citations[high])
-                great = len(citations) - small
-                if small < citations[high] <= great:
-                    return citations[high]
-                else:
-                    small = citations.index(citations[low])
-                    great = len(citations) - small
-                    if small < citations[low] <= great:
-                        return citations[low]
+    # def binarySearch(citations, low, high):
+    #     print("low: ", low, " high: ", high)
+    #     if citations:
+    #         if low == high:
+    #             small = citations.index(citations[low])
+    #             great = len(citations) - small
+    #             if small < citations[low] <= great:
+    #                 return citations[low]
+    #             else:
+    #                 if citations[low] > 0:
+    #                     return 1
+    #                 else:
+    #                     return 0
+    #         elif high - low == 1:
+    #             small = citations.index(citations[high])
+    #             great = len(citations) - small
+    #             if small < citations[high] <= great:
+    #                 return citations[high]
+    #             else:
+    #                 small = citations.index(citations[low])
+    #                 great = len(citations) - small
+    #                 if small < citations[low] <= great:
+    #                     return citations[low]
+    #
+    #         mid = int((low + high) / 2)
+    #         # print("mid: ", mid)
+    #         small = citations.index(citations[mid])
+    #         great = len(citations) - small
+    #         if small < citations[mid] <= great:
+    #             # print("upper")
+    #             return binarySearch(citations, mid, high)
+    #         else:
+    #             # print("lower")
+    #             return binarySearch(citations, low, mid)
+    #     else:
+    #         return 0
+    #
+    # return binarySearch(citations, 0, len(citations) - 1)
 
-            mid = int((low + high) / 2)
-            # print("mid: ", mid)
-            small = citations.index(citations[mid])
-            great = len(citations) - small
-            if small < citations[mid] <= great:
-                # print("upper")
-                return binarySearch(citations, mid, high)
-            else:
-                # print("lower")
-                return binarySearch(citations, low, mid)
+    left, right = 0, len(citations) - 1
+
+    size = len(citations)
+
+    while left <= right:
+
+        mid = left + (right - left) // 2
+
+        the_number_of_larger_equal_to_current = size - mid
+        h_index = citations[mid]
+
+        if h_index < the_number_of_larger_equal_to_current:
+            # current h index is too small, make it larger
+            left = mid + 1
+
+        elif h_index > the_number_of_larger_equal_to_current:
+            # current h index is to large, make it smaller
+            right = mid - 1
+
         else:
-            return 0
+            # meet the definition of h-index
+            return h_index
 
-    return binarySearch(citations, 0, len(citations) - 1)
-
+    return size - left
 
 citations = [11, 15]
 citations = [0, 1, 3, 5, 6]
-# citations = [0, 1]
+citations = [0, 1]
 print(h_index(citations))
